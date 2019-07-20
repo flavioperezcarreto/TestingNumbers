@@ -1,0 +1,5 @@
+{
+  "functionAppKey": "Aaq8xXCjCVGkT8ZpXnEx5KXFtUt/vAO7wuPYl6Q2WkSYaMdcO9bxXw==",
+  "urlBase": "https://testingnumbers20190720034943.azurewebsites.net/api",
+  "testNumberFunctionName": "SumTwoIntegers"
+}

@@ -12,7 +12,7 @@ namespace TestingNumbers
 {
     public static class Function1
     {
-        [FunctionName("Function1")]
+        [FunctionName("SumTwoIntegers")]
         public static async Task<IActionResult> Run(
             [HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = null)] HttpRequest req,
             ILogger log)
@@ -25,9 +25,35 @@ namespace TestingNumbers
             dynamic data = JsonConvert.DeserializeObject(requestBody);
             name = name ?? data?.name;
 
-            return name != null
-                ? (ActionResult)new OkObjectResult($"Hello, {name}")
-                : new BadRequestObjectResult("Please pass a name on the query string or in the request body");
+            string number1 = req.Query["num1"];
+            string number2 = req.Query["num2"];
+
+            int? int1 = StringToNullableInt(number1);
+            int? int2 = StringToNullableInt(number2);
+
+            if (int1 == null)
+            {
+                log.LogInformation("Returning bad request for number 1.");
+                return new BadRequestObjectResult("Please pass an integer num1 on the query string or in the request body");
+            }
+
+            if (int2 == null)
+            {
+                log.LogInformation("Returning bad request for number 2.");
+                return new BadRequestObjectResult("Please pass an integer num2 on the query string or in the request body");
+            }
+
+            var sum = int1 + int2;
+            log.LogInformation($"Returning Ok with the value of {sum} for inputs {number1} and {number2}");
+
+            return new OkObjectResult($"Result: {sum}");
+        }
+
+        private static int? StringToNullableInt(string input)
+        {
+            int outValue;
+            return int.TryParse(input, out outValue) ? (int?)outValue : null;
         }
     }
+    
 }
